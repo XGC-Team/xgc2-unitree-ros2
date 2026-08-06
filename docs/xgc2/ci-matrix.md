@@ -46,12 +46,14 @@ sample. Discovering an installed executable is not authorization to execute it.
 
 ## Thor boundary
 
-`.github/workflows/thor-ci.yml` is manual-only, restricted to the trusted
-`xgc2` branch, and targets labels `[self-hosted, Linux, ARM64, thor,
-xgc2-trusted]`. Configure the `thor-ci` environment with required reviewers
-before registering a matching runner. The runner must not be available to
-pull-request jobs and should be isolated from robot actuation networks while it
-builds repository code.
+Do not register a repository-level Thor self-hosted runner with this public
+fork. A pull request can contain arbitrary workflow code, so labels, a manual
+trigger, and an environment approval on one trusted workflow are not a
+repository-wide runner access boundary.
 
-Thor validation in this workflow proves native arm64 compilation only. Any later
-robot-side observation must be a separate, explicitly approved, read-only test.
+The public fork proves native arm64 compatibility on GitHub-hosted ephemeral
+runners. A later Thor validation must be initiated from a private trusted
+orchestrator (or directly by an administrator), check out an immutable reviewed
+commit, and keep the build host isolated from robot actuation networks. It may
+compile and inspect packages only. Robot-side observation remains a separate,
+explicitly approved, read-only test.
