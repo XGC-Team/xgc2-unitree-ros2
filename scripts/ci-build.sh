@@ -99,8 +99,10 @@ readonly -a b2_executables=(
   b2w_stand_example
 )
 
+readonly example_prefix="$(ros2 pkg prefix unitree_ros2_example)"
+
 for executable in "${b2_executables[@]}"; do
-  executable_path="${example_install}/lib/unitree_ros2_example/${executable}"
+  executable_path="${example_prefix}/lib/unitree_ros2_example/${executable}"
   if [[ ! -x "${executable_path}" ]]; then
     echo "Missing installed executable: ${executable_path}" >&2
     exit 6
