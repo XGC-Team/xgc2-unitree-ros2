@@ -1,0 +1,73 @@
+name: XGC2 ROS 2 compatibility matrix
+
+on:
+  pull_request:
+    branches: [xgc2]
+  push:
+    branches: [xgc2]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: xgc2-unitree-ros2-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build-${{ matrix.ros_distro }}-${{ matrix.ubuntu_codename }}-${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    container:
+      image: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ros_distro: humble
+            ubuntu_codename: jammy
+            arch: amd64
+            runner: ubuntu-22.04
+            image: ros:humble-ros-base-jammy
+          - ros_distro: humble
+            ubuntu_codename: jammy
+            arch: arm64
+            runner: ubuntu-22.04-arm
+            image: ros:humble-ros-base-jammy
+          - ros_distro: jazzy
+            ubuntu_codename: noble
+            arch: amd64
+            runner: ubuntu-24.04
+            image: ros:jazzy-ros-base-noble
+          - ros_distro: jazzy
+            ubuntu_codename: noble
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            image: ros:jazzy-ros-base-noble
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      XGC2_EXPECT_UBUNTU_CODENAME: ${{ matrix.ubuntu_codename }}
+      XGC2_EXPECT_DEB_ARCH: ${{ matrix.arch }}
+    steps:
+      - name: Check out trusted build input
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verify matrix tuple
+        shell: bash
+        run: |
+          set -euo pipefail
+          source /etc/os-release
+          test "${ROS_DISTRO}" = "${{ matrix.ros_distro }}"
+          test "${VERSION_CODENAME}" = "${{ matrix.ubuntu_codename }}"
+          test "$(dpkg --print-architecture)" = "${{ matrix.arch }}"
+
+      - name: Install build dependencies
+        shell: bash
+        run: ./scripts/install-ci-dependencies.sh
+
+      - name: Build and inspect installed packages
+        shell: bash
+        run: ./scripts/ci-build.sh

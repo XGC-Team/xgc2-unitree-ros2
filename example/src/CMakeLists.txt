@@ -167,6 +167,16 @@ install(TARGETS g1_audio_client_example)
 install(TARGETS h2_loco_client)
 install(TARGETS h2_ankle_swing_example)
 
+# Keep the upstream package and executable names unchanged.  These targets were
+# built previously but were missing from the install space, which meant that a
+# packaged workspace could not discover them through `ros2 run`.
+install(TARGETS
+        b2_sport_client
+        b2_stand_example
+        b2w_sport_client
+        b2w_stand_example
+        DESTINATION lib/${PROJECT_NAME})
+
 
 
 if(BUILD_TESTING)

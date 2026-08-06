@@ -1,0 +1,34 @@
+name: Trusted Thor build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-jazzy-noble-arm64-thor:
+    if: github.repository == 'lxk36/xgc2-unitree-ros2' && github.ref == 'refs/heads/xgc2'
+    runs-on: [self-hosted, Linux, ARM64, thor, xgc2-trusted]
+    environment: thor-ci
+    timeout-minutes: 45
+    container:
+      image: ros:jazzy-ros-base-noble
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      XGC2_EXPECT_UBUNTU_CODENAME: noble
+      XGC2_EXPECT_DEB_ARCH: arm64
+    steps:
+      - name: Check out trusted xgc2 branch
+        uses: actions/checkout@v4
+        with:
+          ref: xgc2
+          persist-credentials: false
+
+      - name: Install build dependencies
+        shell: bash
+        run: ./scripts/install-ci-dependencies.sh
+
+      - name: Build and inspect installed packages
+        shell: bash
+        run: ./scripts/ci-build.sh
