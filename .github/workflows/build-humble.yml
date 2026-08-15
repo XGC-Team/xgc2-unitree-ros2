@@ -1,4 +1,4 @@
-name: Build in ubuntu:22.04 with ROS2 Humble
+name: Build Unitree ROS 2 Humble
 
 on:
   push:
