@@ -13,12 +13,15 @@ esac
 
 export DEBIAN_FRONTEND=noninteractive
 
-apt-get update
-apt-get install -y --no-install-recommends \
+for pkg in \
   libeigen3-dev \
   libyaml-cpp-dev \
   "ros-${ROS_DISTRO}-rmw-cyclonedds-cpp" \
   "ros-${ROS_DISTRO}-rosbag2-cpp" \
   "ros-${ROS_DISTRO}-rosidl-generator-dds-idl"
-
-rm -rf /var/lib/apt/lists/*
+do
+  if ! dpkg -s "${pkg}" >/dev/null 2>&1; then
+    echo "image is missing ${pkg}; use xgc2-build-*-full-*" >&2
+    exit 1
+  fi
+done

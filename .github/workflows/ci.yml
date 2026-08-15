@@ -29,22 +29,22 @@ jobs:
             ubuntu_codename: jammy
             arch: amd64
             runner: ubuntu-22.04
-            image: ros:humble-ros-base-jammy
+            image: ghcr.io/xgc-team/xgc2-images/xgc2-build-jammy-full-humble:1.0.0
           - ros_distro: humble
             ubuntu_codename: jammy
             arch: arm64
             runner: ubuntu-22.04-arm
-            image: ros:humble-ros-base-jammy
+            image: ghcr.io/xgc-team/xgc2-images/xgc2-build-jammy-full-humble:1.0.0
           - ros_distro: jazzy
             ubuntu_codename: noble
             arch: amd64
             runner: ubuntu-24.04
-            image: ros:jazzy-ros-base-noble
+            image: ghcr.io/xgc-team/xgc2-images/xgc2-build-noble-full-jazzy:1.0.0
           - ros_distro: jazzy
             ubuntu_codename: noble
             arch: arm64
             runner: ubuntu-24.04-arm
-            image: ros:jazzy-ros-base-noble
+            image: ghcr.io/xgc-team/xgc2-images/xgc2-build-noble-full-jazzy:1.0.0
     env:
       DEBIAN_FRONTEND: noninteractive
       XGC2_EXPECT_UBUNTU_CODENAME: ${{ matrix.ubuntu_codename }}
